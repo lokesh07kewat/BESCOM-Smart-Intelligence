@@ -1077,7 +1077,7 @@ with tab_forecast:
         zoom_toggle = st.toggle("🔍 Zoom to Peak Hours", value=False)
 
     if len(forecasts_filt) > 0:
-        chart_df = forecasts_filt.set_index("timestamp")[["actual_demand","predicted_demand"]].resample("1H").mean().reset_index()
+        chart_df = forecasts_filt.set_index("timestamp")[["actual_demand","predicted_demand"]].resample("1h").mean().reset_index()
         
         if zoom_toggle:
             # Simple simulation of zoom: take the top 24 hours of data
