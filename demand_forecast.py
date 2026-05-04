@@ -39,6 +39,7 @@ warnings.filterwarnings("ignore")      # Suppress sklearn convergence warnings i
 
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import TimeSeriesSplit
 
@@ -187,7 +188,8 @@ class GBForecaster:
     def __init__(self):
         self.models   = {}    # zone_id → trained GBR model
         self.scalers  = {}    # zone_id → fitted StandardScaler
-        self.feature_importances = {}   # zone_id → feature importance dict
+        self.feature_importances = {}
+        self.imputers = {}   # zone_id → feature importance dict
 
     def fit(self, train_df: pd.DataFrame):
         """
@@ -208,8 +210,11 @@ class GBForecaster:
 
             # Scale features to zero mean, unit variance
             # GBR is less sensitive to this than linear models, but it helps
+            imputer = SimpleImputer(strategy="median")
+            X_imputed = imputer.fit_transform(X)
+
             scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X)
+            X_scaled = scaler.fit_transform(X_imputed)
             # fit_transform: computes mean/std from X, then scales X
             # On test data we only call transform() — no refitting
 
@@ -222,6 +227,7 @@ class GBForecaster:
             # Store model and scaler
             self.models[zone_id]  = model
             self.scalers[zone_id] = scaler
+            self.imputers[zone_id] = imputer
 
             # Extract feature importance
             # model.feature_importances_ is an array of shape (n_features,)
@@ -248,7 +254,8 @@ class GBForecaster:
 
             # Scale using the same scaler fitted on training data
             # NEVER refit the scaler on test data — that would cause leakage
-            X_scaled = self.scalers[zone_id].transform(zone_data)
+            X_imputed = self.imputers[zone_id].transform(zone_data)
+            X_scaled = self.scalers[zone_id].transform(X_imputed)
 
             # Predict and place results back at the correct indices
             predictions[zone_mask] = self.models[zone_id].predict(X_scaled)
@@ -686,7 +693,7 @@ def run_forecast_pipeline(input_path: str = "features_zone_clean.csv") -> pd.Dat
 
 if __name__ == "__main__":
 
-    forecast_df, ensemble_model, eval_results = run_forecast_pipeline("features_zone_clean.csv")
+    forecast_df, ensemble_model, eval_results = run_forecast_pipeline("/content/features_zone.csv")
 
     # Save forecast output
     out_path = "forecasts.csv"

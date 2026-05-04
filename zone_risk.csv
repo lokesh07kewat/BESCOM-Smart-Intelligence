@@ -1,6 +1,6 @@
 zone_id,avg_predicted,peak_predicted,pct_high_risk,dominant_risk
 zone_0,7.344,24.837,59.82,HIGH
 zone_1,11.024,18.658,50.729,LOW
-zone_2,7.04,10.231,61.277,CRITICAL
-zone_3,3.569,7.118,28.661,LOW
+zone_2,7.039,10.232,61.277,CRITICAL
+zone_3,3.569,7.119,28.661,LOW
 zone_4,2.737,8.415,34.143,LOW
