@@ -693,7 +693,7 @@ def run_forecast_pipeline(input_path: str = "features_zone_clean.csv") -> pd.Dat
 
 if __name__ == "__main__":
 
-    forecast_df, ensemble_model, eval_results = run_forecast_pipeline("/content/features_zone.csv")
+    forecast_df, ensemble_model, eval_results = run_forecast_pipeline("features_zone.csv")
 
     # Save forecast output
     out_path = "forecasts.csv"
