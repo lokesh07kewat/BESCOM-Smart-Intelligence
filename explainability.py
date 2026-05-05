@@ -24,6 +24,7 @@ import os                       # File path operations
 from datetime import datetime   # Timestamp every audit entry
 from sklearn.ensemble import IsolationForest
 import joblib                   # Save / load trained models
+from anomaly_detector import IsolationForestDetector
 
 
 # ══════════════════════════════════════════════════════════════════════════════
