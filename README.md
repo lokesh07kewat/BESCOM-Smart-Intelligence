@@ -134,39 +134,44 @@ bescom-smart-meter/
 
 ## Quickstart
 
-### 1. Install dependencies
-
+### Step 1: Clone the repository
 ```bash
-pip install numpy pandas scikit-learn joblib streamlit plotly
+git clone [https://github.com/lokesh07kewat/BESCOM-Smart-Intelligence](https://github.com/lokesh07kewat/BESCOM-Smart-Intelligence)
+cd BESCOM-Smart-Intelligence
 ```
 
-For full model support (optional — code works without these):
+### Step 2: Install dependencies
 ```bash
-pip install xgboost prophet shap
+pip install -r requirements.txt
 ```
 
-### 2. Run the full pipeline
-
+### Step 3: Run the full pipeline (in order)
 ```bash
-# Generate synthetic smart meter data
+# Generates smart_meter_data.csv (~432k rows)
 python data_generator.py
 
-# Build features (lag, rolling, peer-group, cyclical encoding)
+# Builds features_meter.csv and features_zone.csv
 python feature_engineering.py
 
-# Train demand forecast models (Part A)
+# Trains forecast models, outputs forecasts.csv, zone_risk.csv
 python demand_forecast.py
 
-# Train anomaly detection models (Part B)
+# Trains anomaly models, outputs anomaly_results.csv
 python anomaly_detector.py
 
-# Launch the dashboard
+# Runs SHAP explainability demo on one flagged meter
+python explainability.py
+```
+
+### Step 4: Launch the dashboard
+```bash
 streamlit run dashboard.py
 ```
+Open: `http://localhost:8501`
 
 Dashboard opens at `http://localhost:8501`
 
-### 3. Demo scenario (for presentation)
+### 3. Demo scenario 
 
 The synthetic dataset has **10 meters with injected anomalies** across 4 types:
 
